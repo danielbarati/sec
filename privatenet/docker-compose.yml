@@ -1,0 +1,155 @@
+version: '2'
+services:
+  bootstrap:
+    container_name: "bootstrap"
+    build:
+      context: ./bootstrap
+    container_name: bootstrap
+    hostname: bootstrap
+    environment:
+      - networkID=13
+      - bootnodeIP=172.20.0.2
+      - address=ec6a4e03bedaaac4c6070e8a96f19de71fb874e2
+      - bootkeyhex=98fc23b799bf4b438b293dd873bdb0df7cd8317eccf4f4f930fd2a3cf67efa8f
+    volumes:
+      - $PWD/bootstrap/keystore:/home/euser/.ethereum/devchain/keystore:rw
+      - $PWD/eth-config:/home/euser/eth-config:ro
+    ports:
+      - "30301:30301/udp"
+    networks:
+      eth_net:
+        ipv4_address: 172.20.0.2
+
+  node1:
+    container_name: "node1"
+    build:
+      context: ./node1
+    environment:
+      - bootnodeID=ec6af72f98742578523e465866e3e947bcf86f583adbb271a6e02995d6c4716d0ff6bb06e3add8ab042c2d65e7d21539821319ffc2d8c642ff8c8fd93b855a0b
+      - bootnodeIP=172.20.0.2
+      - node1key=17d7b6a108af9fd1fe3202cd1bc401a6d058c7ed4ad8fdfba3a369640a4996fd  # home/enode/.ethereum/devchain/geth/nodekey
+      - address=8090726167de701826cf63fdb560bda7ae652be4
+    external_links:
+      - bootstrap
+    volumes:
+      - $PWD/node1/keystore:/home/euser/.ethereum/devchain/keystore:rw
+      - $PWD/eth-config:/home/euser/eth-config:ro
+      - $PWD/eth-config/static-nodes.json:/home/euser/.ethereum/devchain/geth/static-nodes.json:ro
+    ports: 
+      - 8545:8545
+      - 9545:9545
+      - 30303:30303
+    networks:
+      eth_net:
+        ipv4_address: 172.20.0.3
+  
+  node2:
+    container_name: "node2"
+    build:
+      context: ./node2
+    environment:
+      - bootnodeID=ec6af72f98742578523e465866e3e947bcf86f583adbb271a6e02995d6c4716d0ff6bb06e3add8ab042c2d65e7d21539821319ffc2d8c642ff8c8fd93b855a0b
+      - bootnodeIP=172.20.0.2
+      - node2key=bb203389df60dc8d0479bd5c4f26dc4d4f1cd8553ebb178544402bc7ade76239 
+      - address=2828a8f260baa874625b3b794ed6509225f48b40
+    external_links:
+      - bootstrap
+    volumes:
+      - $PWD/node2/keystore:/home/euser/.ethereum/devchain/keystore:rw
+      - $PWD/eth-config:/home/euser/eth-config:ro
+      - $PWD/eth-config/static-nodes.json:/home/euser/.ethereum/devchain/geth/static-nodes.json:ro
+    ports: 
+      - 8546:8545
+      - 9546:9545
+      - 30304:30303
+    networks:
+      eth_net:
+        ipv4_address: 172.20.0.4
+  
+  node3:
+    container_name: "node3"
+    build:
+      context: ./node3
+    environment:
+      - bootnodeID=ec6af72f98742578523e465866e3e947bcf86f583adbb271a6e02995d6c4716d0ff6bb06e3add8ab042c2d65e7d21539821319ffc2d8c642ff8c8fd93b855a0b
+      - bootnodeIP=172.20.0.2
+      - node3key=b7e35e97461c48ff65480609bc0e44060088202e7ca8d0aaf69ee8b201680b7f
+      - address=ef8383c0ef7a45eb1b956b087e7dc59d0706b274
+    external_links:
+      - bootstrap
+    volumes:
+      - $PWD/node3/keystore:/home/euser/.ethereum/devchain/keystore:rw
+      - $PWD/eth-config:/home/euser/eth-config:ro
+      - $PWD/eth-config/static-nodes.json:/home/euser/.ethereum/devchain/geth/static-nodes.json:ro
+    ports: 
+      - 8547:8545
+      - 9547:9545
+      - 30305:30303
+    networks:
+      eth_net:
+        ipv4_address: 172.20.0.5
+  
+  scdeployer:
+    container_name: "scdeployer"
+    build: 
+      context: ./scdeployer
+    environment: 
+      - bootnodeID=ec6af72f98742578523e465866e3e947bcf86f583adbb271a6e02995d6c4716d0ff6bb06e3add8ab042c2d65e7d21539821319ffc2d8c642ff8c8fd93b855a0b
+      - bootnodeIP=172.20.0.2
+      - scdeployerkey=a18fe8585dbffa498c27717d69ed79a4dc365b7ea453efb0b0997bbb2d879a3c
+      - address=f71195df0eb8438dd9eaf839d3abb47859f2175f
+    external_links:
+      - bootstrap
+    volumes:
+      - $PWD/scdeployer/keystore:/home/euser/.ethereum/devchain/keystore:rw
+      - $PWD/eth-config:/home/euser/eth-config:ro
+      - $PWD/eth-config/static-nodes.json:/home/euser/.ethereum/devchain/geth/static-nodes.json:ro
+    ports: 
+      - 8540:8540
+      - 30300:30303
+    networks:
+      eth_net:
+        ipv4_address: 172.20.0.6
+  
+  miner:
+    container_name: "miner"
+    build: 
+      context: ./miner
+    environment:
+      - bootnodeID=ec6af72f98742578523e465866e3e947bcf86f583adbb271a6e02995d6c4716d0ff6bb06e3add8ab042c2d65e7d21539821319ffc2d8c642ff8c8fd93b855a0b
+      - bootnodeIP=172.20.0.2
+      - minerkey=16fb079bf7869a33f8fe22a60925a7502d2db8fc1b93eabf0e3b05e07b4dd610
+      - address=4bccda700fd05bfcf553fdaafcaaaee5e772a27e
+    external_links:
+      - bootstrap
+    volumes:
+      - $PWD/miner/keystore:/home/euser/.ethereum/devchain/keystore:rw
+      - $PWD/eth-config:/home/euser/eth-config:ro
+      - $PWD/eth-config/static-nodes.json:/home/euser/.ethereum/devchain/geth/static-nodes.json:ro
+    ports: 
+      - 8550:8545
+      - 30306:30303
+    networks:
+      eth_net:
+        ipv4_address: 172.20.0.100
+
+  explorer:
+    container_name: explorer
+    hostname: explorer
+    #depends_on:
+    #  - node1
+    ports:
+      - 8080:8080
+    build:
+      context: ./explorer
+    networks:
+      eth_net:
+        ipv4_address: 172.20.0.200
+
+        
+networks:
+  eth_net:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.20.0.0/16

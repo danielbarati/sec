@@ -8,7 +8,7 @@
 
 
 ## SEC Smart Contract
-The SEC smart contract can be deployed using:
+The SEC smart contract is found in ```/Sec/contracts/SecContract.sol```. It can be deployed using on the alternatives in this list:
 - [Truffle](https://www.trufflesuite.com/truffle) and [Ganache](https://www.trufflesuite.com/ganache) - needs installation. Use their respective documentation.
 - [Remix](https://remix.ethereum.org/) - needs no installation. Deploy directly in the web IDE. Interaction with the smart contract can be made through the UI.
 - the deployment code in ```/client/deployer/deployer.go```. To use this, change the IP constant in ```/client/utils/constants.go``` to the IP of a node that is connected to an Ethereum network. This option is intended to be used with a local, private Ethereum network. Interactions with the smart contract can be done using RPC calling (see ```/client/curl.txt```).
